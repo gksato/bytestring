@@ -50,7 +50,8 @@ import Data.ByteString.Internal (ByteString(..), accursedUnutterablePerformIO, c
 import Data.Typeable    (Typeable)
 import Data.Data        (Data(..), mkNoRepType)
 #if MIN_VERSION_base(4,9,0)
-import Data.Semigroup   (Semigroup((<>)))
+import Data.Semigroup           (Semigroup(..), stimesMonoid)
+import qualified Data.List.NonEmpty as NonEmpty (toList)
 #endif
 import Data.Monoid      (Monoid(..))
 import Data.String      (IsString(..))
@@ -150,6 +151,8 @@ instance Ord ShortByteString where
 #if MIN_VERSION_base(4,9,0)
 instance Semigroup ShortByteString where
     (<>)    = append
+    stimes  = stimesMonoid
+    sconcat = mconcat . NonEmpty.toList
 #endif
 
 instance Monoid ShortByteString where

@@ -134,8 +134,9 @@ module Data.ByteString.Builder.Internal (
 
 import           Control.Arrow (second)
 
-#if !(MIN_VERSION_base(4,11,0)) && MIN_VERSION_base(4,9,0)
-import           Data.Semigroup (Semigroup((<>)))
+#if MIN_VERSION_base(4,9,0)
+import Data.Semigroup           (Semigroup(..), stimesMonoid)
+import qualified Data.List.NonEmpty as NonEmpty (toList)
 #endif
 #if !(MIN_VERSION_base(4,8,0))
 import           Data.Monoid
@@ -410,6 +411,10 @@ append (Builder b1) (Builder b2) = Builder $ b1 . b2
 instance Semigroup Builder where
   {-# INLINE (<>) #-}
   (<>) = append
+  {-# INLINE stimes #-}
+  stimes = stimesMonoid
+  {-# INLINE sconcat #-}
+  sconcat = mconcat . NonEmpty.toList
 #endif
 
 instance Monoid Builder where
